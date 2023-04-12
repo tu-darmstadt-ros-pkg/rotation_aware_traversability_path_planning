@@ -1,0 +1,57 @@
+name: lattice_planning
+
+### planner environment settings ###############################################
+
+# discretization of continuous space
+cell_size: &cell_size 0.02 # cell size in meters
+
+resolution:
+  x: *cell_size
+  y: *cell_size
+  z: *cell_size
+  num_angle_bins: 72 # bins per full turn (0-360°)
+
+# parameters for heuristics
+max_heuristic_value: 1000.0
+heuristic_scale: 1.0
+
+# maximum risk before state will be discarded
+max_risk: 1.0
+
+### planner settings ###########################################################
+
+plugin_set: spot_lattice_planning
+
+# define the planner of choice provided by the SBPL package
+# - ARAPlanner
+# - ADPlanner
+# - ANAPlanner
+# - RSTARPlanner
+planner_type: ARAPlanner
+#num_random_nodes: 10
+
+# search until a specific time limit is reached or first solution is found
+search_until_first_solution: True
+
+max_planning_time: 1.0 # default max planning time if not given by request
+initial_epsilon: 8.0
+decrease_epsilon: 0.2
+
+forward_search: True
+
+collision_check:
+  # collision check mask (binary encoded)
+  # - 1 feet
+  # - 2 upper body
+  collision_check_mask: 4
+
+  # footstep collision check accuracy
+  # - 0 (just the circumcircle of the foot)
+  # - 1 (just the incircle of the foot)
+  # - 2 (circumcircle and incircle recursivly checked for the whole foot)
+  collision_check_accuracy: 2
+
+### misc ###################################################################
+feedback_rate: 10.0 # [Hz]
+threads: 4
+jobs_per_thread: 100

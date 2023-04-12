@@ -1,0 +1,93 @@
+robot_model:
+  description:
+    robot_description: "/robot_description"
+
+    ### upper body settings ########################################################
+    bases:
+      - idx: 0
+        name: "PELVIS"
+        shape: "CUBOID" # CUBOID, SPHERICAL
+        size: { x: 1.1, y: 0.5, z: 0.6 } # [m]
+        link: "base_link"
+        link_to_feet_center_offset: { x: -0.025, y: 0.00, z: -0.48, roll: 0.00, pitch: 0.00, yaw: 0.00 } # 3x[m] 3x[rad], transformation from geometric feet center to tf frame
+    
+    ### foot settings ##############################################################
+    base_foot: &base_foot
+      - shape: "SPHERICAL" # CUBOID, SPHERICAL
+        size: { x: 0.07, y: 0.07, z: 0.07 } # [m]
+        # position (offset) of planner foot frame (center of sole) given in robot's "foot" link frame
+        link_to_sole_offset: { x: -0.025, y: 0.00, z: -0.01, roll: 0.00, pitch: 0.00, yaw: 0.00 } # 3x[m] 3x[rad]
+
+    feet:
+      - <<: *base_foot
+        idx: 0
+        name: "LF_LEG"
+        link: "front_left_ee"
+        # the neutral stance describes the pose of each foot (center of sole) relative to the geometric feet center
+        neutral_stance: { x: 0.26, y: 0.17, z: 0.00, roll: 0.00, pitch: 0.00, yaw: 0.00 }
+        vis:
+          color: { r: 0.0, g: 1.0, b: 0.0, a: 0.6 }
+
+      - <<: *base_foot
+        idx: 1
+        name: "RF_LEG"
+        link: "front_right_ee"
+        neutral_stance: { x: 0.26, y: -0.17, z: 0.00, roll: 0.00, pitch: 0.00, yaw: 0.00 }
+        vis:
+          color: { r: 1.0, g: 0.0, b: 0.0, a: 0.6 }
+
+      - <<: *base_foot
+        idx: 2
+        name: "LH_LEG"
+        link: "rear_left_ee"
+        neutral_stance: { x: -0.31, y: 0.17, z: 0.00, roll: 0.00, pitch: 0.00, yaw: 0.00 }
+        vis:
+          color: { r: 0.0, g: 0.6, b: 0.0, a: 0.6 }
+
+      - <<: *base_foot
+        idx: 3
+        name: "RH_LEG"
+        link: "rear_right_ee"
+        neutral_stance: { x: -0.31, y: -0.17, z: 0.00, roll: 0.00, pitch: 0.00, yaw: 0.00 }
+        vis:
+          color: { r: 0.6, g: 0.0, b: 0.0, a: 0.6 }
+
+    ### leg settings ###############################################################
+    legs:
+      - idx: 0
+        name: "LF_LEG"
+        root_link: "base_link"
+        tip_link: "front_left_ee"
+        joints: [ "front_left_hip_x", "front_left_hip_y", "front_left_knee" ]
+
+      - idx: 1
+        name: "RF_LEG"
+        root_link: "base_link"
+        tip_link: "front_right_ee"
+        joints: [ "front_right_hip_x", "front_right_hip_y", "front_right_knee" ]
+
+      - idx: 2
+        name: "LH_LEG"
+        root_link: "base_link"
+        tip_link: "rear_left_ee"
+        joints: [ "rear_left_hip_x", "rear_left_hip_y", "rear_left_knee" ]
+
+      - idx: 3
+        name: "RH_LEG"
+        root_link: "base_link"
+        tip_link: "rear_right_ee"
+        joints: [ "rear_right_hip_x", "rear_right_hip_y", "rear_right_knee" ]
+
+    ### plugins ####################################################################
+  plugins:
+    kinematics:
+      name: spot_kinematics
+      params:
+        root_link: "base_link"
+        leveled_base: False
+        foot_type: "ball_foot"
+        ignore_foot_orientation: True
+    gait_generator:
+      name: cyclic_gait_generator
+      params:
+        cycle: [ { fh: [ 0, 1, 2, 3 ], fb: 0 } ]

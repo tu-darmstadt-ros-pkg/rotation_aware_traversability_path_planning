@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<launch>
+    <arg name="ns" default="l3/terrain_model" />
+    <arg name="plugin_set" default="example" />
+    <arg name="args" default="" />
+
+    <group ns="$(arg ns)">
+        <!-- load plugin sets from YAML file to parameter server -->
+        <rosparam file="$(find traversability_map_generator)/config/grid_map_merger_plugins.yaml" command="load" />
+
+        <node name="l3_terrain_model_generator" pkg="l3_terrain_model_generator" type="terrain_model_generator_node" args="$(arg args)" respawn="true" output="screen">
+            <param name="plugin_set" value="$(arg plugin_set)" />
+        </node>
+    </group>
+</launch>

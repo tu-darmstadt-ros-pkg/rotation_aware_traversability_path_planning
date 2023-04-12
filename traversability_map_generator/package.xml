@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>traversability_map_generator</name>
+  <version>0.0.0</version>
+  <description>The traversability_map_generator package</description>
+
+  <maintainer email="simon.giegerich@stud.tu-darmstadt.de">Simon Giegerich</maintainer>
+
+  <license>BSD</license>
+
+  <author email="simon.giegerich@stud.tu-darmstadt.de">Simon Giegerich</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>roscpp</depend>
+  <depend>l3_terrain_model_generator</depend>
+
+  <exec_depend>rviz</exec_depend>
+
+  <export>
+    <l3_terrain_model_generator plugin="${prefix}/plugins.xml"/>
+  </export>
+</package>

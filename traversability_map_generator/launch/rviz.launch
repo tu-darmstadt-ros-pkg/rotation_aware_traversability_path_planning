@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<launch>
+  <arg name="rviz_profile_path" default="$(dirname)/../config/rviz/grid_map_merger_setup.rviz"/>
+
+  <arg name="load_rviz_profile_cmd" default="-d $(arg rviz_profile_path)" if="$(eval bool(arg('rviz_profile_path')))"/>
+  <arg name="load_rviz_profile_cmd" default="" unless="$(eval bool(arg('rviz_profile_path')))"/>
+
+  <node name="$(anon rviz)" pkg="rviz" type="rviz" args="$(arg load_rviz_profile_cmd)" respawn="true"/>
+</launch>

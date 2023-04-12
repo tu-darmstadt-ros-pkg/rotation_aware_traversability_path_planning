@@ -1,0 +1,128 @@
+plugin_sets:
+  spot_lattice_planning:
+    # StateGeneratorPlugin
+    direct_goal_state_generator:
+      params:
+        max_fb_dist: 0.3
+        strict_mode: False
+    #lattice_goal_state_generator:
+    #  params: &lattice_params
+    #    expand_neutral_stance: True
+    #    turn_in_place: True
+    #    omni_directional: True
+    #    max_dist:
+    #      x: 0.3
+    #      y: 0.2
+    #    max_dyaw: 0.78
+    #    min_curve_radius: 0.5
+
+    lattice_state_generator:
+      params:
+        #<<: *lattice_params
+        resolution:
+          x: &cell_size 0.05
+          y: *cell_size
+          z: *cell_size
+          num_angle_bins: &num_angle_bins 72 # bins per full turn (0-360°)
+        expand_neutral_stance: True
+        turn_in_place: True
+        omni_directional: True
+        max_dist:
+          x: 0.6
+          y: 0.3
+        max_dyaw: 0.78
+        min_curve_radius: 0.5
+
+    # ReachabilityPlugins
+    # TODO: We require a new simple dist check plugin suitable for lattice planning
+    state_3d_reachability:
+      params:
+        max_step_dz: 0.2
+
+    # StepCostEstimatorPlugins
+    const_step_cost_estimator:
+      params:
+        step_cost: 0.1
+    angular_step_cost_estimator:
+      params:
+        goal_orient_distance: 0.0
+        cost_weight: 0.1
+    traversability_step_cost_estimator:
+      params:
+        traversability_map_topic: /grid_map
+        traversability_map_layer: traversability_heuristic_smoothed
+        unknown_region_value: &unknown_region_value 0.9
+        min_traversability_weight: 0.25
+        mean_traversability_weight: 0.75
+        safety_margin_x: 0.1
+        safety_margin_y: 0.1
+
+    # HeuristicPlugins
+    traversability_rotation_heuristic:
+      params:
+        traversability_map_topic: /grid_map
+        traversability_map_layer: traversability_heuristic_smoothed
+        size_x: 20
+        size_y: 20
+        resolution:
+          x: *cell_size
+          y: *cell_size
+          z: *cell_size
+          num_angle_bins: *num_angle_bins
+        check_floating_base_accessibility: True
+        check_foothold_accessibility: False
+        visualize: True
+        vis_frame_id: world
+        use_rotation_heuristic: True
+        disable_distance: 0.0
+        unknown_region_value: *unknown_region_value
+        exponential_traversability_weight: 3.0
+
+    # PostProcessPlugins
+    step_dynamics_post_process:
+      params:
+        sway_duration: 0.0
+        step_duration: 1.0
+        swing_height: 0.1
+    simple_floating_base_post_process:
+      params:
+        post_process_state: True
+        post_process_step_plan: False
+
+    # TerrainModelPlugins
+    terrain_model:
+      import: basic_terrain_model
+      params:
+        topic: /terrain_model
+
+    # WorldModelPlugins
+    traversability_map_model:
+      params:
+        traversability_map_topic: /grid_map
+        traversability_map_layer: traversability_heuristic_smoothed
+        min_traversability_weight: 0.25
+        mean_traversability_weight: 0.75
+        traversability_threshold: 0.55
+        check_floating_base_accessibility: True
+        check_foothold_accessibility: False
+        num_sampling_steps_x: 20
+        num_sampling_steps_y: 10
+        disable_distance: 0.0
+
+  vis:
+    step_plan_request_vis: none
+    step_plan_vis: none
+    upper_body_vis: none
+    planning_feedback_vis: none
+    inverse_kinematics_vis:
+      params:
+        robot_description: "/robot_description"
+        stabilize_base: False
+        animate_time_scale: 0.25
+    nav_goal_marker_vis:
+      params:
+        step_controller_topic: /l3/footstep_planning/execute_step_plan
+        frame: "world"
+        marker_offset_z: 0.5
+        planning_horizon: 1.0
+        max_planning_time: 5.0

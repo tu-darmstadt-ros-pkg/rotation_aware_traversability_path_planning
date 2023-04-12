@@ -1,0 +1,38 @@
+# L3
+- git: {local-name: src/l3/l3_core, uri: 'https://github.com/tu-darmstadt-ros-pkg/l3_core.git', version: master}
+- git: {local-name: src/l3/l3_footstep_planning, uri: 'https://github.com/tu-darmstadt-ros-pkg/l3_footstep_planning.git', version: feature/heuristic_lookup_table} #TODO: change to master when merged
+- git: {local-name: src/l3/l3_terrain_modeling, uri: 'https://github.com/tu-darmstadt-ros-pkg/l3_terrain_modeling.git', version: master}
+- git: {local-name: src/l3/l3_step_controller, uri: 'https://github.com/tu-darmstadt-ros-pkg/l3_step_controller.git', version: master}
+- git: {local-name: src/l3/l3_navigation, uri: 'https://github.com/tu-darmstadt-ros-pkg/l3_navigation.git', version: master}
+
+
+# ViGIR pluginlib 
+- git: {local-name: src/vigir/vigir_generic_params, uri: 'https://github.com/team-vigir/vigir_generic_params.git', version: master}
+- git: {local-name: src/vigir/vigir_pluginlib, uri: 'https://github.com/team-vigir/vigir_pluginlib.git', version: noetic-devel}
+
+# Spot
+# Drivers
+## hector_spot_ros -- ROS driver for spot and URDF description files
+- git: {local-name: src/hector_spot_ros, uri: 'git@github.com:tu-darmstadt-ros-pkg/hector_spot_ros.git', version: main}
+## spot_cam_ros -- ROS driver for Spot CAM
+- git: {local-name: src/spot_cam_ros, uri: 'git@github.com:NexploreResearch/spot_cam_ros.git', version: master}
+# champ -- gait generation
+- git: {local-name: src/champ, uri: 'https://github.com/chvmp/champ', version: master}
+# Launch files
+## aico_spot_launch -- Common launch files for aico_spot
+- git: {local-name: src/aico_spot_launch, uri: 'git@github.com:NexploreResearch/aico_spot_launch.git', version: master}
+## construction_site_monitoring_launch -- Construction Site Monitoring common onboard launch files
+- git: {local-name: src/construction_site_monitoring_launch, uri: 'git@git.sim.informatik.tu-darmstadt.de:hector/construction_site_monitoring_launch.git', version: master}
+# Behavior
+- git: {local-name: src/aico_spot_behavior, uri: 'git@github.com:NexploreResearch/aico_spot_behavior.git', version: master}
+# Model files
+## aico_spot_sim -- Packages related to AICO Spot simulation.
+- git: {local-name: src/aico_spot_sim, uri: 'git@github.com:NexploreResearch/aico_spot_sim.git', version: master}
+## aico_spot_description -- URDF description files for the AICO Spot robot
+- git: {local-name: src/aico_spot_description, uri: 'git@github.com:NexploreResearch/aico_spot_description.git', version: master}
+## construction_site_scenario -- Simulation environments for construction sites.
+- git: {local-name: src/construction_site_scenario, uri: 'git@github.com:NexploreResearch/construction_site_scenario.git', version: master}
+
+# Hector related
+- git: {local-name: src/hector_math, uri: 'https://github.com/tu-darmstadt-ros-pkg/hector_math.git', version: master}
+- git: {local-name: src/hector_stability_metrics, uri: 'https://github.com/tu-darmstadt-ros-pkg/hector_stability_metrics.git', version: master}

@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+
+<launch>
+  <arg name="ns" default="l3/footstep_planning"/>
+  <arg name="gui" default="False"/>
+  <arg name="foot_type" default="lattice_planning"/>
+  <arg name="plugin_set" default="spot_plugin_sets_lattice_planning"/>
+  <arg name="default_params" default="lattice_planning"/>
+
+  <group ns="$(arg ns)">
+    <!-- start robot model server -->
+    <include file="$(find spot_l3_config)/launch/robot_model_server.launch">
+      <arg name="foot_type" default="$(arg foot_type)"/>
+    </include>
+
+    <!-- start up footstep planning system -->
+    <include file="$(find l3_footstep_planning)/launch/footstep_planning_basics.launch"/>
+
+    <!-- start footstep planner -->
+    <node name="spot_footstep_planner" pkg="l3_global_footstep_planner" type="global_footstep_planner_node"
+          respawn="true" output="screen"/>
+
+    <!-- load sets from YAML file to parameter server -->
+    <rosparam file="$(dirname)/../config/$(arg plugin_set).yaml" command="load"/>
+
+    <!-- specify where to load robot specific parameters -->
+    <param name="params_path" value="$(dirname)/../config/planner/"/>
+    <param name="default_params" value="$(arg default_params)"/>
+  </group>
+
+  <!-- start step widget -->
+  <include file="$(find l3_footstep_planning_widgets)/launch/step_interface_rqt.launch" if="$(arg gui)">
+    <arg name="ns" value="$(arg ns)"/>
+  </include>
+</launch>

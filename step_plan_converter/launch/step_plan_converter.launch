@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+
+<launch>
+  <node name="step_plan_converter" pkg="step_plan_converter" type="step_plan_converter_node" respawn="true"
+        output="screen"/>
+</launch>

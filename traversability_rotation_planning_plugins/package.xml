@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>traversability_rotation_planning_plugins</name>
+  <version>0.0.0</version>
+  <description>The traversability_rotation_planning_plugins package</description>
+
+  <maintainer email="simon.giegerich@stud.tu-darmstadt.de">Simon Giegerich</maintainer>
+
+  <license>BSD</license>
+
+  <author email="simon.giegerich@stud.tu-darmstadt.de">Simon Giegerich</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>roscpp</depend>
+  <depend>l3_footstep_planning_plugins</depend>
+  <depend>footstep_planning_libs</depend>
+  <depend>hector_stability_metrics</depend>
+  <depend>hector_math</depend>
+
+  <export>
+    <l3_footstep_planning_plugins plugin="${prefix}/plugins.xml"/>
+  </export>
+</package>

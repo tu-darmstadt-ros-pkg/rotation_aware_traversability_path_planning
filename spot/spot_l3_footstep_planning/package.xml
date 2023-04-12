@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>spot_l3_footstep_planning</name>
+  <version>0.0.0</version>
+  <description>The spot_l3_footstep_planning package</description>
+
+  <maintainer email="simon.giegerich@stud.tu-darmstadt.de">Simon Giegerich</maintainer>
+
+  <license>BSD</license>
+
+  <author email="simon.giegerich@stud.tu-darmstadt.de">Simon Giegerich</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>roscpp</depend>
+  <depend>l3_footstep_planning</depend>
+  <depend>traversability_rotation_planning_plugins</depend>
+  <depend>spot_l3_plugins</depend>
+  <depend>spot_l3_config</depend>
+  <depend>aico_spot_description</depend>
+
+  <exec_depend>l3_global_footstep_planner</exec_depend>
+  <exec_depend>l3_footstep_planning_widgets</exec_depend>
+  <exec_depend>rviz</exec_depend>
+</package>

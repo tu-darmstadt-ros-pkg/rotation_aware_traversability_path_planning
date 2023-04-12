@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>spot_l3_config</name>
+  <version>0.1.0</version>
+  <description>The spot_l3_config package</description>
+
+  <maintainer email="simon.giegerich@stud.tu-darmstadt.de">Simon Giegerich</maintainer>
+
+  <license>BSD</license>
+
+  <author email="simon.giegerich@stud.tu-darmstadt.de">Simon Giegerich</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>roscpp</depend>
+
+  <exec_depend>l3_plugins</exec_depend>
+</package>
