@@ -1,6 +1,6 @@
 # L3
 - git: {local-name: src/l3/l3_core, uri: 'https://github.com/tu-darmstadt-ros-pkg/l3_core.git', version: master}
-- git: {local-name: src/l3/l3_footstep_planning, uri: 'https://github.com/tu-darmstadt-ros-pkg/l3_footstep_planning.git', version: feature/heuristic_lookup_table} #TODO: change to master when merged
+- git: {local-name: src/l3/l3_footstep_planning, uri: 'https://github.com/tu-darmstadt-ros-pkg/l3_footstep_planning.git', version: master}
 - git: {local-name: src/l3/l3_terrain_modeling, uri: 'https://github.com/tu-darmstadt-ros-pkg/l3_terrain_modeling.git', version: master}
 - git: {local-name: src/l3/l3_step_controller, uri: 'https://github.com/tu-darmstadt-ros-pkg/l3_step_controller.git', version: master}
 - git: {local-name: src/l3/l3_navigation, uri: 'https://github.com/tu-darmstadt-ros-pkg/l3_navigation.git', version: master}
