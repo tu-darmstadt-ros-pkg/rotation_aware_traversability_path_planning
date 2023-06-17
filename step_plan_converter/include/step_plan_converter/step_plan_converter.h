@@ -41,6 +41,7 @@
 #include <geometry_msgs/PoseStamped.h>
 
 #include <move_base_lite_msgs/FollowPathAction.h>
+#include <move_base_lite_msgs/MoveBaseAction.h>
 
 namespace step_plan_converter
 {
@@ -57,11 +58,27 @@ protected:
    */
   void stepPlanCallback( const l3_footstep_planning_msgs::StepPlan &step_plan );
 
+  void moveBaseGoalCB();
+
+  void moveBaseCancelCB();
+
+  void followPathDoneCB( const actionlib::SimpleClientGoalState &state,
+                         const move_base_lite_msgs::FollowPathResultConstPtr &result_in );
+
+
   // The subscriber for l3 step plan
   ros::Subscriber step_plan_sub_;
 
+  ros::Publisher goal_pub_;
+
   // The action client for the follow path action
   actionlib::SimpleActionClient<move_base_lite_msgs::FollowPathAction> followPathActionClient_;
+
+  actionlib::SimpleActionServer<move_base_lite_msgs::MoveBaseAction> moveBaseActionServer_;
+
+  actionlib::SimpleActionServer<move_base_lite_msgs::MoveBaseAction>::GoalConstPtr move_base_action_goal_;
+
+  geometry_msgs::PoseStamped current_goal_;
 };
 }  // namespace step_plan_converter
 

@@ -33,9 +33,16 @@
 namespace step_plan_converter
 {
 StepPlanConverter::StepPlanConverter( ros::NodeHandle &nh )
-  : followPathActionClient_( "/controller/follow_path", false )
+  : followPathActionClient_( "/controller/follow_path", false ), moveBaseActionServer_( nh, "/move_base_with_l3",
+                                                                                        false )
 {
   ros::NodeHandle pnh( "~" );
+
+  goal_pub_ = nh.advertise<geometry_msgs::PoseStamped>( "/goal", 1, true );
+
+  moveBaseActionServer_.registerGoalCallback( boost::bind( &StepPlanConverter::moveBaseGoalCB, this ));
+  moveBaseActionServer_.registerPreemptCallback( boost::bind( &StepPlanConverter::moveBaseCancelCB, this ));
+  moveBaseActionServer_.start();
 
   followPathActionClient_.waitForServer( ros::Duration( 1 ));
 
@@ -60,10 +67,11 @@ void StepPlanConverter::stepPlanCallback( const l3_footstep_planning_msgs::StepP
     poseStamped.pose.position.x = pose.x();
     poseStamped.pose.position.y = pose.y();
     poseStamped.pose.position.z = pose.z();
-    poseStamped.pose.orientation.x = pose.getQuaternion().x();
-    poseStamped.pose.orientation.y = pose.getQuaternion().y();
-    poseStamped.pose.orientation.z = pose.getQuaternion().z();
-    poseStamped.pose.orientation.w = pose.getQuaternion().w();
+    Eigen::Quaterniond quaternion = pose.getQuaternion();
+    poseStamped.pose.orientation.x = quaternion.x();
+    poseStamped.pose.orientation.y = quaternion.y();
+    poseStamped.pose.orientation.z = quaternion.z();
+    poseStamped.pose.orientation.w = quaternion.w();
 
     poses.push_back( poseStamped );
   }
@@ -93,6 +101,56 @@ void StepPlanConverter::stepPlanCallback( const l3_footstep_planning_msgs::StepP
   goal.goal.follow_path_options.is_fixed = false;
 
   // send goal
-  followPathActionClient_.sendGoal( goal.goal );
+  followPathActionClient_.sendGoal( goal.goal, boost::bind( &StepPlanConverter::followPathDoneCB, this, _1, _2 ));
+}
+
+void StepPlanConverter::moveBaseGoalCB()
+{
+  move_base_action_goal_ = moveBaseActionServer_.acceptNewGoal();
+  current_goal_ = move_base_action_goal_->target_pose;
+
+  goal_pub_.publish( current_goal_ );
+}
+
+void StepPlanConverter::moveBaseCancelCB()
+{
+  if ( moveBaseActionServer_.isActive())
+  {
+    move_base_lite_msgs::MoveBaseResult result;
+    result.result.val = move_base_lite_msgs::ErrorCodes::PREEMPTED;
+    moveBaseActionServer_.setPreempted( result, "Action preempted at user request" );
+    if ( followPathActionClient_.isServerConnected())
+      followPathActionClient_.cancelAllGoals();
+  }
+  else
+  {
+    ROS_WARN( "[MoveBaseLiteServer] Cancel called without an active goal" );
+  }
+}
+
+void StepPlanConverter::followPathDoneCB( const actionlib::SimpleClientGoalState &state,
+                                          const move_base_lite_msgs::FollowPathResultConstPtr &result_in )
+{
+  if ( moveBaseActionServer_.isActive())
+  {
+    if ( result_in->result.val == move_base_lite_msgs::ErrorCodes::SUCCESS )
+    {
+      move_base_lite_msgs::MoveBaseResult result;
+      result.result.val = move_base_lite_msgs::ErrorCodes::SUCCESS;
+      moveBaseActionServer_.setSucceeded( result, "Action succeeded" );
+    }
+    else if ( result_in->result.val == move_base_lite_msgs::ErrorCodes::PREEMPTED )
+    {
+      move_base_lite_msgs::MoveBaseResult result;
+      result.result.val = move_base_lite_msgs::ErrorCodes::PREEMPTED;
+      moveBaseActionServer_.setPreempted( result, "Action preempted" );
+    }
+    else
+    {
+      move_base_lite_msgs::MoveBaseResult result;
+      result.result.val = result_in->result.val;
+      moveBaseActionServer_.setAborted( result, "Action failed with message: " + state.getText());
+    }
+  }
 }
 }  // namespace step_plan_converter
