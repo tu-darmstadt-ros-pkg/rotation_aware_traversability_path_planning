@@ -37,8 +37,11 @@
 #include <l3_libs/types/step_queue.h>
 
 #include <l3_footstep_planning_msgs/StepPlan.h>
+#include <l3_footstep_planning_msgs/StepPlanRequestAction.h>
 
 #include <geometry_msgs/PoseStamped.h>
+
+#include <grid_map_ros/grid_map_ros.hpp>
 
 #include <move_base_lite_msgs/FollowPathAction.h>
 #include <move_base_lite_msgs/MoveBaseAction.h>
@@ -65,6 +68,14 @@ protected:
   void followPathDoneCB( const actionlib::SimpleClientGoalState &state,
                          const move_base_lite_msgs::FollowPathResultConstPtr &result_in );
 
+  /**
+   * @brief Callback for the map.
+   * @param map_new The new map
+   */
+  void mapCallback( const grid_map_msgs::GridMapConstPtr &map_new );
+
+  // The subscriber for the traversability map
+  ros::Subscriber traversability_map_sub_;
 
   // The subscriber for l3 step plan
   ros::Subscriber step_plan_sub_;
@@ -73,6 +84,8 @@ protected:
 
   // The action client for the follow path action
   actionlib::SimpleActionClient<move_base_lite_msgs::FollowPathAction> followPathActionClient_;
+
+  l3::SimpleActionClient<l3_footstep_planning_msgs::StepPlanRequestAction>::Ptr step_plan_request_ac_;
 
   actionlib::SimpleActionServer<move_base_lite_msgs::MoveBaseAction> moveBaseActionServer_;
 

@@ -46,7 +46,11 @@ StepPlanConverter::StepPlanConverter( ros::NodeHandle &nh )
 
   followPathActionClient_.waitForServer( ros::Duration( 1 ));
 
+  step_plan_request_ac_ = l3::SimpleActionClient<l3_footstep_planning_msgs::StepPlanRequestAction>::create(nh, "step_plan_request", false);
+
   step_plan_sub_ = nh.subscribe( "/l3/footstep_planning/step_plan", 1, &StepPlanConverter::stepPlanCallback, this );
+
+  traversability_map_sub_ = nh.subscribe( "/grid_map", 1, &StepPlanConverter::mapCallback, this );
 }
 
 void StepPlanConverter::stepPlanCallback( const l3_footstep_planning_msgs::StepPlan &step_plan )
@@ -109,7 +113,16 @@ void StepPlanConverter::moveBaseGoalCB()
   move_base_action_goal_ = moveBaseActionServer_.acceptNewGoal();
   current_goal_ = move_base_action_goal_->target_pose;
 
-  goal_pub_.publish( current_goal_ );
+  l3_footstep_planning_msgs::StepPlanRequestGoal request;
+  request.plan_request.header.frame_id = current_goal_.header.frame_id;
+  request.plan_request.header.stamp = ros::Time::now();
+
+  l3_msgs::FloatingBase goal_floating_base = l3_msgs::FloatingBase();
+  goal_floating_base.pose = current_goal_.pose;
+
+  request.plan_request.goal_floating_bases.push_back(goal_floating_base);
+
+  //step_plan_request_ac_->sendGoal(request, boost::bind(&StepPlanConverter::followPathDoneCB, this, _1, _2));
 }
 
 void StepPlanConverter::moveBaseCancelCB()
@@ -152,5 +165,11 @@ void StepPlanConverter::followPathDoneCB( const actionlib::SimpleClientGoalState
       moveBaseActionServer_.setAborted( result, "Action failed with message: " + state.getText());
     }
   }
+}
+
+void StepPlanConverter::mapCallback( const grid_map_msgs::GridMapConstPtr &map_new )
+{
+  if ( moveBaseActionServer_.isActive())
+    goal_pub_.publish( current_goal_ );
 }
 }  // namespace step_plan_converter
