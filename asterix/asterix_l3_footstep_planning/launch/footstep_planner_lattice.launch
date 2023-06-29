@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<launch>
+  <arg name="ns" default="l3/footstep_planning"/>
+  <arg name="gui" default="False"/>
+  <arg name="plugin_set" default="asterix_plugin_sets_lattice_planning"/>
+
+  <!-- load robot model -->
+  <include file="$(find asterix_description)/launch/load_description.launch"/>
+
+  <include file="$(dirname)/footstep_planner.launch">
+    <arg name="ns" value="$(arg ns)"/>
+    <arg name="gui" value="$(arg gui)"/>
+    <arg name="foot_type" value="lattice_planning"/>
+    <arg name="plugin_set" value="$(arg plugin_set)"/>
+    <arg name="default_params" value="lattice_planning"/>
+  </include>
+</launch>

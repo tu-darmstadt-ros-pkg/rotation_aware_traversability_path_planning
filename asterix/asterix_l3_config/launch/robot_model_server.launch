@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<launch>
+  <arg name="foot_type" default="lattice_planning"/>
+
+  <!-- start robot model server -->
+  <node name="robot_model_server" pkg="l3_plugins" type="robot_model_server" respawn="true" output="screen"/>
+  <rosparam file="$(dirname)/../config/asterix_$(arg foot_type).yaml" command="load"/>
+</launch>
