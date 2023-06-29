@@ -102,8 +102,13 @@ TraversabilityRotationHeuristic::getHeuristicValue( const FloatingBase &from, co
   l3::Position2D from_pos( from.x(), from.y());
 
   if ( use_rotation_heuristic_ )
-    return (heuristic_without_rotation + std::abs( shortestAngularDistance( from.yaw(), normalizeAngle(
-      rotation_hlut_.getHeuristicEntry( l3::Position2D( from.x(), from.y()))))));
+  {
+    double yaw_des = rotation_hlut_.getHeuristicEntry( l3::Position2D( from.x(), from.y()));
+    double yaw_1 = std::abs( shortestAngularDistance( from.yaw(), normalizeAngle( yaw_des )));
+    double yaw_2 = std::abs( shortestAngularDistance( from.yaw(), normalizeAngle( yaw_des + M_PI )));
+
+    return heuristic_without_rotation + std::min( yaw_1, yaw_2 );
+  }
 
   return heuristic_without_rotation;
 }
@@ -241,7 +246,8 @@ bool TraversabilityRotationHeuristic::initialize( const vigir_generic_params::Pa
     return false;
 
   // Subscribe topics
-  traversability_map_sub_ = nh_.subscribe( traversability_map_topic_, 1, &TraversabilityRotationHeuristic::mapCallback, this );
+  traversability_map_sub_ = nh_.subscribe( traversability_map_topic_, 1, &TraversabilityRotationHeuristic::mapCallback,
+                                           this );
 
   return true;
 }

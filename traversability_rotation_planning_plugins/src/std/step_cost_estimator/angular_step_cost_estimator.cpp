@@ -75,7 +75,13 @@ bool AngularStepCostEstimator::getCost( const PlanningState &state, double &cost
   // Set cost to 0 if we are close to the goal
   if ( euclideanDistance( from_fb->x(), from_fb->y(), goal_position_.x(), goal_position_.y()) > disable_distance_ &&
        euclideanDistance( to_fb->x(), to_fb->y(), goal_position_.x(), goal_position_.y()) > disable_distance_ )
-    cost = abs( shortestAngularDistance( from_fb->yaw(), std::atan2( y_trans, x_trans ))) * cost_weight_;
+  {
+    double yaw_des = std::atan2( y_trans, x_trans );
+    double yaw_1 = std::abs( shortestAngularDistance( from_fb->yaw(), yaw_des ));
+    double yaw_2 = std::abs( shortestAngularDistance( from_fb->yaw(), normalizeAngle( yaw_des + M_PI )));
+
+    cost = std::min( yaw_1, yaw_2 ) * cost_weight_;
+  }
   else
     cost = 0.0;
   cost_multiplier = 1.0;
