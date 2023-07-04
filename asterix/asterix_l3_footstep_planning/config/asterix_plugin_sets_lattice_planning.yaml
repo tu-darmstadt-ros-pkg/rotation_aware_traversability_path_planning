@@ -26,7 +26,7 @@ plugin_sets:
           num_angle_bins: &num_angle_bins 72 # bins per full turn (0-360°)
         expand_neutral_stance: True
         turn_in_place: True
-        omni_directional: True
+        omni_directional: False
         max_dist:
           x: 0.6
           y: 0.3
