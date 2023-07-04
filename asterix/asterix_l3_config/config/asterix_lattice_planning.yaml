@@ -1,0 +1,51 @@
+robot_model:
+  description:
+    robot_description: "/robot_description"
+
+    ### upper body settings ########################################################
+    bases:
+      - idx: 0
+        name: "PELVIS"
+        shape: "CUBOID" # CUBOID, SPHERICAL
+        size: { x: 0.72, y: 0.52, z: 0.69 } # [m]
+        link: "base_link"
+        link_to_feet_center_offset: { x: 0.00, y: 0.00, z: -0.0535, roll: 0.00, pitch: 0.00, yaw: 0.00 } # 3x[m] 3x[rad], transformation from geometric feet center to tf frame
+    
+    ### foot settings ##############################################################
+    base_foot: &base_foot
+      - shape: "CUBOID" # CUBOID, SPHERICAL
+        size: { x: 0.72, y: 0.13, z: 0.02 } # [m]
+        # position (offset) of planner foot frame (center of sole) given in robot's "foot" link frame
+        link_to_sole_offset: { x: 0.00, y: 0.00, z: 0.00, roll: 0.00, pitch: 0.00, yaw: 0.00 } # 3x[m] 3x[rad]
+
+    feet:
+      - <<: *base_foot
+        idx: 0
+        name: "L_TRACK"
+        link: "main_track_left_link"
+        # the neutral stance describes the pose of each foot (center of sole) relative to the geometric feet center
+        neutral_stance: { x: 0.00, y: 0.19, z: 0.00, roll: 0.00, pitch: 0.00, yaw: 0.00 }
+        vis:
+          color: { r: 0.0, g: 1.0, b: 0.0, a: 0.6 }
+
+      - <<: *base_foot
+        idx: 1
+        name: "R_TRACK"
+        link: "main_track_left_right"
+        neutral_stance: { x: 0.00, y: -0.19, z: 0.00, roll: 0.00, pitch: 0.00, yaw: 0.00 }
+        vis:
+          color: { r: 1.0, g: 0.0, b: 0.0, a: 0.6 }
+
+    ### plugins ####################################################################
+  plugins:
+    kinematics:
+      name: asterix_kinematics
+      params:
+        root_link: "base_link"
+        leveled_base: False
+        foot_type: "flat_foot"
+        ignore_foot_orientation: True
+    gait_generator:
+      name: cyclic_gait_generator
+      params:
+        cycle: [ { fh: [ 0, 1 ], fb: 0 } ]

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<launch>
+  <arg name="frame_id" default="world"/>
+  <arg name="pos_x" default="0.0"/>
+  <arg name="pos_y" default="0.0"/>
+  <arg name="pos_z" default="0.0"/>
+  <arg name="ori_x" default="0.0"/>
+  <arg name="ori_y" default="0.0"/>
+  <arg name="ori_z" default="0.0"/>
+  <arg name="ori_w" default="1.0"/>
+
+  <node pkg="rostopic" type="rostopic" name="goal_publisher"
+        args="pub /goal geometry_msgs/PoseStamped '{
+            header: {seq: 0, stamp: now, frame_id: $(arg frame_id)},
+            pose: {
+                position: {x: $(arg pos_x), y: $(arg pos_y), z: $(arg pos_z)},
+                orientation: {x: $(arg ori_x), y: $(arg ori_y), z: $(arg ori_z), w: $(arg ori_w)}
+            }}'"
+        output="screen"/>
+</launch>
