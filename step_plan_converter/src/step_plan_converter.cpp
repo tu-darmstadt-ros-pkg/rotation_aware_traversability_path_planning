@@ -33,7 +33,7 @@
 namespace step_plan_converter
 {
 StepPlanConverter::StepPlanConverter( ros::NodeHandle &nh )
-  : followPathActionClient_( "/controller/follow_path", false ), moveBaseActionServer_( nh, "/move_base_with_l3",
+  : followPathActionClient_( "/controller/follow_path", false ), moveBaseActionServer_( nh, "/l3_planner/move_base",
                                                                                         false )
 {
   ros::NodeHandle pnh( "~" );
