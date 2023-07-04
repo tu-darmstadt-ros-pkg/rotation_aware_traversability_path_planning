@@ -90,7 +90,7 @@ void StepPlanConverter::stepPlanCallback( const l3_footstep_planning_msgs::StepP
   goal.goal.follow_path_options.desired_speed = 0.0;
 
   goal.goal.follow_path_options.reset_stuck_history = true;
-  goal.goal.follow_path_options.is_fixed = true;
+  goal.goal.follow_path_options.is_fixed = false;
 
   // send goal
   followPathActionClient_.sendGoal( goal.goal );

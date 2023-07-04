@@ -58,6 +58,7 @@ bool AsterixKinematicsPlugin::initialize( const vigir_generic_params::ParameterS
     return false;
 
   neutral_stance_.resize( 2 );
+  // TODO: correct neutral stance
   neutral_stance_[L_TRACK] = { 0.013089439258670232, 1.0788590434098584, -1.6985821284268727 };
   neutral_stance_[R_TRACK] = { neutral_stance_[L_TRACK][0], -neutral_stance_[L_TRACK][1], neutral_stance_[L_TRACK][2] };
 
@@ -68,25 +69,21 @@ Pose AsterixKinematicsPlugin::calcFeetCenter( const FootholdArray &footholds ) c
 {
   Pose pose = l3::calcFeetCenter( footholds );
 
-  FootholdMap map = l3::footholdArrayToMap<FootholdMap>( footholds );
+  auto map = l3::footholdArrayToMap<FootholdMap>( footholds );
 
   ROS_ASSERT( map.find( L_TRACK ) != map.end());
   ROS_ASSERT( map.find( R_TRACK ) != map.end());
 
-  // estimate body yaw using computing the vectors between the diagonal opposing foot poses
-  Vector3 lf = map[L_TRACK].pose().getPosition() + Vector3( 0.36, 0.0, 0.0 );
-  Vector3 rf = map[R_TRACK].pose().getPosition() + Vector3( 0.36, 0.0, 0.0 );
-  Vector3 lh = map[L_TRACK].pose().getPosition() - Vector3( 0.36, 0.0, 0.0 );
-  Vector3 rh = map[R_TRACK].pose().getPosition() - Vector3( 0.36, 0.0, 0.0 );
+  // estimate body yaw the center position of the two tracks
+  Vector3 left = map[L_TRACK].pose().getPosition();
+  Vector3 right = map[R_TRACK].pose().getPosition();
 
-  Vector3 vec1 = lf - rh;
-  Vector3 vec2 = rf - lh;
+  Vector3 vec = right - left;
 
-  double yaw1 = atan2( vec1.y(), vec1.x());
-  double yaw2 = atan2( vec2.y(), vec2.x());
-  double dyaw = shortestAngularDistance( yaw1, yaw2 );
+  double orthogonal_yaw = atan2( vec.y(), vec.x());
+  double yaw = normalizeAngle( orthogonal_yaw + M_PI_2 );
 
-  pose.setYaw( yaw1 + 0.5 * dyaw );
+  pose.setYaw( yaw );
 
   return pose;
 }
@@ -99,8 +96,8 @@ Pose AsterixKinematicsPlugin::calcFeetCenter( const FootholdConstPtrArray &footh
   return calcFeetCenter( temp );
 }
 
-bool AsterixKinematicsPlugin::calcLegIK( const Pose &base_pose, const Foothold &foothold, const std::vector<double> &cur_q,
-                                      std::vector<double> &q ) const
+bool AsterixKinematicsPlugin::calcLegIK( const Pose &base_pose, const Foothold &foothold,
+                                         const std::vector<double> &cur_q, std::vector<double> &q ) const
 {
   // provide better start point for KDL
   if ( cur_q.empty() && foothold.idx < neutral_stance_.size())
