@@ -79,6 +79,10 @@ plugin_sets:
         exponential_traversability_weight: 3.0
 
     # PostProcessPlugins
+    01_floating_base_post_process:
+      import: asterix_floating_base_post_process
+    #  params:
+    #     base_height: 0.12
     step_dynamics_post_process:
       params:
         sway_duration: 0.0
@@ -93,7 +97,7 @@ plugin_sets:
     terrain_model:
       import: basic_terrain_model
       params:
-        topic: /terrain_model
+        elevation_map_topic: /elevation_mapping/elevation_map
 
     # WorldModelPlugins
     traversability_map_model:

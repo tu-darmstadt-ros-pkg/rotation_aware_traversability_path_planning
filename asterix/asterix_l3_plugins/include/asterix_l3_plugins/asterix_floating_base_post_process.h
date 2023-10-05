@@ -28,56 +28,27 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // =================================================================================================
 
-#include <asterix_l3_plugins/asterix_kinematics.h>
+#pragma once
 
-#include <l3_math/angles.h>
+#include <l3_footstep_planning_plugins/base/post_process_plugin.h>
 
 namespace asterix_l3
 {
-AsterixKinematicsPlugin::AsterixKinematicsPlugin() : KdlKinematics( "asterix_kinematics" )
+using namespace l3_footstep_planning;
+
+class AsterixFloatingBasePostProcess
+  : public PostProcessPlugin
 {
+public:
+  AsterixFloatingBasePostProcess();
+
+  bool loadParams( const vigir_generic_params::ParameterSet &params = vigir_generic_params::ParameterSet()) override;
+
+  bool initialize( const vigir_generic_params::ParameterSet &params = vigir_generic_params::ParameterSet()) override;
+
+  bool postProcess( State &state, const FootIndexArray &updated_ids = FootIndexArray()) const override;
+
+protected:
+  double base_height_; // default base height over the ground (ground height equals feet center height)
+};
 }
-
-bool AsterixKinematicsPlugin::loadParams( const vigir_generic_params::ParameterSet &params )
-{
-  if ( !KdlKinematics::loadParams( params ))
-    return false;
-
-  return true;
-}
-
-bool AsterixKinematicsPlugin::initialize( const vigir_generic_params::ParameterSet &params )
-{
-  if ( !KdlKinematics::initialize( params ))
-    return false;
-
-  return true;
-}
-
-Pose AsterixKinematicsPlugin::calcFeetCenter( const FootholdArray &footholds ) const
-{
-  Pose pose = l3::calcFeetCenter( footholds );
-
-  auto map = l3::footholdArrayToMap<FootholdMap>( footholds );
-
-  ROS_ASSERT( map.find( L_TRACK ) != map.end());
-  ROS_ASSERT( map.find( R_TRACK ) != map.end());
-
-  // set body yaw to track yaw
-  pose.setYaw( map[L_TRACK].pose().yaw());
-
-  return pose;
-}
-
-Pose AsterixKinematicsPlugin::calcFeetCenter( const FootholdConstPtrArray &footholds ) const
-{
-  FootholdArray temp;
-  for ( Foothold::ConstPtr f: footholds )
-    temp.push_back( *f );
-  return calcFeetCenter( temp );
-}
-}  // namespace asterix_l3
-
-#include <pluginlib/class_list_macros.h>
-
-PLUGINLIB_EXPORT_CLASS( asterix_l3::AsterixKinematicsPlugin, l3::KinematicsPlugin )

@@ -15,11 +15,13 @@ catkin_package(
 include_directories(include ${catkin_INCLUDE_DIRS})
 
 set(HEADERS
+  include/${PROJECT_NAME}/asterix_floating_base_post_process.h
   include/${PROJECT_NAME}/asterix_kinematics.h
   include/${PROJECT_NAME}/asterix_turning_state_generator.h
   )
 
 set(SOURCES
+  src/asterix_floating_base_post_process.cpp
   src/asterix_kinematics.cpp
   src/asterix_turning_state_generator.cpp
   )

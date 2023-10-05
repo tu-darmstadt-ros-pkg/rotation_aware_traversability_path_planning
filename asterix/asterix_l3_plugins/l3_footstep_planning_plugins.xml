@@ -37,4 +37,11 @@
       AsterixTurningStateGenerator: State generator to handle explicitely turning motion of Asterix
     </description>
   </class>
+
+  <class name="asterix_floating_base_post_process" type="asterix_l3::AsterixFloatingBasePostProcess"
+         base_class_type="l3_footstep_planning::PostProcessPlugin">
+    <description>
+      AsterixFloatingBasePostProcess: Floating base post process plugin for Asterix
+    </description>
+  </class>
 </library>
