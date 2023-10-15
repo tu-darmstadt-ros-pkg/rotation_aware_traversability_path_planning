@@ -58,14 +58,18 @@ protected:
 
   void update( const Timer &timer, UpdatedHandles &input, const SensorPlugin *sensor ) override;
 
+  std_msgs::Header getDataHeader() override { return GridMapGeneratorPlugin::getDataHeader(); }
+
+  void getDataBoundary( l3::Vector3 &min, l3::Vector3 &max ) override
+  {
+    GridMapGeneratorPlugin::getDataBoundary( min, max );
+  }
+
   /**
    * @brief Callback for the input grid map.
    * @param grid_map The new input grid map
    */
   void gridMapCb( const grid_map_msgs::GridMap &grid_map );
-
-  // Data handle for the input grid map
-  DataHandle::Ptr in_grid_map_handle_;
 
   // The topic of the input grid map
   std::string topic_;

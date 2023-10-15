@@ -80,8 +80,7 @@ bool GridMapMerger::loadParams( const vigir_generic_params::ParameterSet &params
 
 bool GridMapMerger::initialize( const vigir_generic_params::ParameterSet &params )
 {
-  in_grid_map_handle_ = DataManager::addData( "in_grid_map", std::move( grid_map::GridMap()));
-
+  input_handle_ = DataManager::addData( this, std::string( "in_grid_map" ), std::move( grid_map::GridMap()));
   if ( !GridMapGeneratorPlugin::initialize( params ))
     return false;
 
@@ -107,7 +106,7 @@ void GridMapMerger::processImpl( const Timer &timer, UpdatedHandles &input, cons
 void GridMapMerger::update( const Timer &timer, UpdatedHandles &input, const SensorPlugin *sensor )
 {
   l3::SharedLockPtr in_lock;
-  const auto &in_grid_map = in_grid_map_handle_->value<grid_map::GridMap>( in_lock );
+  const auto &in_grid_map = input_handle_->value<grid_map::GridMap>( in_lock );
 
   l3::UniqueLockPtr out_lock;
   auto &out_grid_map = grid_map_handle_->value<grid_map::GridMap>( out_lock );
@@ -172,7 +171,7 @@ void GridMapMerger::gridMapCb( const grid_map_msgs::GridMap &grid_map )
 {
   // TODO: Use shared pointer instead of deepcopy.
   l3::UniqueLockPtr in_lock;
-  auto &in_grid_map = in_grid_map_handle_->value<grid_map::GridMap>( in_lock );
+  auto &in_grid_map = input_handle_->value<grid_map::GridMap>( in_lock );
 
   grid_map::GridMapRosConverter::fromMessage( grid_map, in_grid_map );
 
@@ -180,7 +179,7 @@ void GridMapMerger::gridMapCb( const grid_map_msgs::GridMap &grid_map )
 
   // Workaround to get publishers
   UpdatedHandles updates;
-  updates.insert( in_grid_map_handle_ );
+  updates.insert( input_handle_ );
 
   process( in_grid_map.getTimestamp(), updates, nullptr );
 }

@@ -44,6 +44,7 @@ plugin_sets:
     grid_map_merger:
       import: grid_map_merger
       params:
+        init_map: true
         topic: /traversability_estimation/traversability_map
         in_layers: [ traversability, traversability, elevation ]
         out_layers: [ traversability_heuristic, traversability_cost, elevation ]
