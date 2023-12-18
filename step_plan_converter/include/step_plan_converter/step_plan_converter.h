@@ -36,11 +36,18 @@
 #include <l3_libs/robot_description/base_info.h>
 #include <l3_libs/types/step_queue.h>
 
+#include <l3_footstep_planning_msgs/footstep_planning_msgs.h>
 #include <l3_footstep_planning_msgs/StepPlan.h>
+#include <l3_footstep_planning_msgs/StepPlanRequestAction.h>
+
+#include <l3_footstep_planning_tools/feet_pose_generator_client.h>
 
 #include <geometry_msgs/PoseStamped.h>
 
+#include <grid_map_ros/grid_map_ros.hpp>
+
 #include <move_base_lite_msgs/FollowPathAction.h>
+#include <move_base_lite_msgs/MoveBaseAction.h>
 
 namespace step_plan_converter
 {
@@ -52,16 +59,50 @@ public:
 
 protected:
   /**
-   * @brief Converts a l3 step plan to a follow path action goal and sends it.
-   * @param step_plan The l3 step plan to convert
+   * @brief Accepts new goal and triggers planning.
    */
-  void stepPlanCallback( const l3_footstep_planning_msgs::StepPlan &step_plan );
+  void moveBaseGoalCB();
 
-  // The subscriber for l3 step plan
-  ros::Subscriber step_plan_sub_;
+  /**
+   * @brief Cancels the current planning and execution.
+   */
+  void moveBaseCancelCB();
+
+  /**
+   * @brief Converts the step plan to a follow path goal and sends it.
+   * @param result The result of the step plan request.
+   */
+  void stepPlanResultCb( const l3_footstep_planning_msgs::StepPlanRequestResultConstPtr &result );
+
+  /**
+   * @brief Sets the status of the move base action server.
+   */
+  void followPathDoneCB( const actionlib::SimpleClientGoalState &state,
+                         const move_base_lite_msgs::FollowPathResultConstPtr &result_in );
+
+  /**
+   * @brief Callback for the map. This is only used for replanning if a new map is received.
+   * @param map_new The new map (not used).
+   */
+  void mapCallback( const grid_map_msgs::GridMapConstPtr &/*map_new*/ );
+
+  // The subscriber for the traversability map
+  ros::Subscriber traversability_map_sub_;
 
   // The action client for the follow path action
-  actionlib::SimpleActionClient<move_base_lite_msgs::FollowPathAction> followPathActionClient_;
+  actionlib::SimpleActionClient<move_base_lite_msgs::FollowPathAction> follow_path_ac_;
+
+  // The action client for the step plan request action
+  l3::SimpleActionClient<l3_footstep_planning_msgs::StepPlanRequestAction>::Ptr step_plan_request_ac_;
+
+  // The action server for the move base action
+  actionlib::SimpleActionServer<move_base_lite_msgs::MoveBaseAction> move_base_as_;
+
+  // The feet pose generator
+  l3_footstep_planning::FeetPoseGeneratorClient::Ptr feet_pose_generator_;
+
+  // The current step plan request
+  l3_footstep_planning_msgs::StepPlanRequestGoal current_request_;
 };
 }  // namespace step_plan_converter
 

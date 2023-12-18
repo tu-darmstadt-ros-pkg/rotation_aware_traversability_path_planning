@@ -15,11 +15,13 @@ catkin_package(
 include_directories(include ${catkin_INCLUDE_DIRS})
 
 set(HEADERS
+  include/${PROJECT_NAME}/spot_floating_base_post_process.h
   include/${PROJECT_NAME}/spot_kinematics.h
   include/${PROJECT_NAME}/spot_turning_state_generator.h
   )
 
 set(SOURCES
+  src/spot_floating_base_post_process.cpp
   src/spot_kinematics.cpp
   src/spot_turning_state_generator.cpp
   )

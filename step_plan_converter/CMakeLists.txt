@@ -3,12 +3,12 @@ project(step_plan_converter)
 
 set(CMAKE_CXX_STANDARD 17)
 
-find_package(catkin REQUIRED COMPONENTS roscpp l3_footstep_planning_msgs)
+find_package(catkin REQUIRED COMPONENTS roscpp l3_footstep_planning traversability_map_generator)
 
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS roscpp l3_footstep_planning_msgs
+  CATKIN_DEPENDS roscpp l3_footstep_planning traversability_map_generator
   #  DEPENDS system_lib
 )
 

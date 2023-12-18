@@ -37,4 +37,11 @@
       SpotTurningStateGenerator: State generator to handle explicitely turning motion of Spot
     </description>
   </class>
+
+  <class name="spot_floating_base_post_process" type="spot_l3::SpotFloatingBasePostProcess"
+         base_class_type="l3_footstep_planning::PostProcessPlugin">
+    <description>
+      SpotFloatingBasePostProcess: Floating base post process plugin for Spot
+    </description>
+  </class>
 </library>
