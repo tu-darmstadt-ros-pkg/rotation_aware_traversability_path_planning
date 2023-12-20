@@ -3,11 +3,14 @@
 <launch>
   <arg name="plugin_set" default="asterix_plugin_sets_lattice_planning"/>
   <arg name="rviz" default="False"/>
+  <arg name="follow_path_topic" default="/controller/follow_path"/>
 
   <include file="$(dirname)/footstep_planner_lattice.launch">
     <arg name="plugin_set" value="$(arg plugin_set)"/>
   </include>
-  <include file="$(find step_plan_converter)/launch/step_plan_converter.launch"/>
+  <include file="$(find step_plan_converter)/launch/step_plan_converter.launch">
+    <arg name="follow_path_topic" value="$(arg follow_path_topic)"/>
+  </include>
   <include file="$(find traversability_map_generator)/launch/grid_map_merger.launch"/>
   <include file="$(dirname)/rviz.launch" if="$(arg rviz)"/>
 </launch>

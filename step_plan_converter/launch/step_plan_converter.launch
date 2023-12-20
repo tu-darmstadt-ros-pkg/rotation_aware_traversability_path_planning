@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
 
 <launch>
+  <arg name="follow_path_topic" default="/controller/follow_path"/>
   <node name="step_plan_converter" pkg="step_plan_converter" type="step_plan_converter_node" respawn="true"
-        output="screen"/>
+        output="screen">
+    <remap from="/controller/follow_path" to="$(arg follow_path_topic)"/>
+  </node>
 </launch>
