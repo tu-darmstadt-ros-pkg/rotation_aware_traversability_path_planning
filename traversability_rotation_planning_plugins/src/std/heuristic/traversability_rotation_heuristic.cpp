@@ -190,11 +190,12 @@ TraversabilityRotationHeuristic::computeHLUTEntryOfNeighbor( const PositionIndex
   float b = std::min( b_1, b_2 );
 
   l3::Position2D neighbor_pos = hlut_.getPositionFromIndex( neighbor );
+  grid_map::Index neighbor_index;
 
   float traversability = unknown_region_value_;
-  if ( traversability_map_.isInside( neighbor_pos ))
+  if ( traversability_map_.getIndex( neighbor_pos, neighbor_index ))
   {
-    traversability = traversability_map_.atPosition( traversability_map_layer_, neighbor_pos );
+    traversability = traversability_map_.at( traversability_map_layer_, neighbor_index );
     if ( std::isnan( traversability ))
       traversability = unknown_region_value_;
   }
