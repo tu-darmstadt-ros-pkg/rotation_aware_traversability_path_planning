@@ -103,6 +103,8 @@ protected:
 
   // The current step plan request
   l3_footstep_planning_msgs::StepPlanRequestGoal current_request_;
+
+  bool still_planning_;
 };
 }  // namespace step_plan_converter
 

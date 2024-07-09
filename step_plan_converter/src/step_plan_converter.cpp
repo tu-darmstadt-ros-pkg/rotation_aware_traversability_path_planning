@@ -36,6 +36,7 @@ namespace step_plan_converter
 {
 StepPlanConverter::StepPlanConverter( ros::NodeHandle &nh )
   : follow_path_ac_( "/controller/follow_path", false ), move_base_as_( nh, "/l3_planner/move_base", false )
+    , still_planning_( false )
 {
   move_base_as_.registerGoalCallback( boost::bind( &StepPlanConverter::moveBaseGoalCB, this ));
   move_base_as_.registerPreemptCallback( boost::bind( &StepPlanConverter::moveBaseCancelCB, this ));
@@ -92,6 +93,8 @@ void StepPlanConverter::moveBaseGoalCB()
 
 void StepPlanConverter::moveBaseCancelCB()
 {
+  still_planning_ = false;
+
   if ( move_base_as_.isActive())
   {
     move_base_lite_msgs::MoveBaseResult result;
@@ -108,6 +111,8 @@ void StepPlanConverter::moveBaseCancelCB()
 
 void StepPlanConverter::stepPlanResultCb( const l3_footstep_planning_msgs::StepPlanRequestResultConstPtr &result )
 {
+  still_planning_ = false;
+
   if ( l3_footstep_planning::hasError( result->status ))
   {
     ROS_ERROR( "[StepPlanConverter] Failed to generate step plan!" );
@@ -166,6 +171,8 @@ void StepPlanConverter::stepPlanResultCb( const l3_footstep_planning_msgs::StepP
 void StepPlanConverter::followPathDoneCB( const actionlib::SimpleClientGoalState &state,
                                           const move_base_lite_msgs::FollowPathResultConstPtr &result_in )
 {
+  still_planning_ = false;
+
   if ( move_base_as_.isActive())
   {
     move_base_lite_msgs::MoveBaseResult result;
@@ -181,7 +188,13 @@ void StepPlanConverter::followPathDoneCB( const actionlib::SimpleClientGoalState
 
 void StepPlanConverter::mapCallback( const grid_map_msgs::GridMapConstPtr &/*map_new*/ )
 {
+  if ( still_planning_ )
+    return;
+
   if ( move_base_as_.isActive())
+  {
+    still_planning_ = true;
     step_plan_request_ac_->sendGoal( current_request_, boost::bind( &StepPlanConverter::stepPlanResultCb, this, _2 ));
+  }
 }
 }  // namespace step_plan_converter
