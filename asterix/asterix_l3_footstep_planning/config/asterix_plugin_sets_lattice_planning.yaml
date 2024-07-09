@@ -28,8 +28,8 @@ plugin_sets:
         turn_in_place: True
         omni_directional: False
         max_dist:
-          x: 0.6
-          y: 0.3
+          x: 0.4
+          y: 0.2
         max_dyaw: 0.78
         min_curve_radius: 0.5
 
@@ -50,14 +50,27 @@ plugin_sets:
     traversability_step_cost_estimator:
       params:
         traversability_map_topic: /grid_map
-        traversability_map_layer: traversability_heuristic_smoothed
+        traversability_map_layer: traversability_cost_smoothed
         unknown_region_value: &unknown_region_value 0.9
         min_traversability_weight: 0.25
         mean_traversability_weight: 0.75
         safety_margin_x: 0.1
         safety_margin_y: 0.1
+    pitch_step_cost_estimator:
+      params:
+        elevation_map_topic: /traversability_estimation/traversability_map
+        normal_x_layer: surface_normal_x
+        normal_y_layer: surface_normal_y
+        num_sampling_steps: 30
+        linear_weight: 75.0
 
     # HeuristicPlugins
+    pitch_heuristic:
+      params:
+        disable_distance: 0.0
+        elevation_map_topic: /traversability_estimation/traversability_map
+        normal_x_layer: surface_normal_x
+        normal_y_layer: surface_normal_y
     traversability_rotation_heuristic:
       params:
         traversability_map_topic: /grid_map
@@ -70,7 +83,7 @@ plugin_sets:
           z: *cell_size
           num_angle_bins: *num_angle_bins
         check_floating_base_accessibility: True
-        check_foothold_accessibility: False
+        check_foothold_accessibility: True
         visualize: True
         vis_frame_id: world
         use_rotation_heuristic: True

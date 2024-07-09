@@ -32,20 +32,32 @@
 
 <library path="lib/libtraversability_rotation_planning_plugins">
   <!-- StepCostEstimatorPlugin -->
-  <class name="traversability_step_cost_estimator" type="l3_footstep_planning::TraversabilityStepCostEstimator"
-         base_class_type="l3_footstep_planning::StepCostEstimatorPlugin">
-    <description>
-      TraversabilityStepCostEstimator: Punishes movements depending on the traversability of the ground
-    </description>
-  </class>
   <class name="angular_step_cost_estimator" type="l3_footstep_planning::AngularStepCostEstimator"
          base_class_type="l3_footstep_planning::StepCostEstimatorPlugin">
     <description>
       AngularStepCostEstimator: Punishes movements that are not oriented in the best direction (gradient descent)
     </description>
   </class>
+  <class name="pitch_step_cost_estimator" type="l3_footstep_planning::PitchStepCostEstimator"
+         base_class_type="l3_footstep_planning::StepCostEstimatorPlugin">
+    <description>
+      PitchStepCostEstimator: Punishes movements that are not orthogonal to elevation changes
+    </description>
+  </class>
+  <class name="traversability_step_cost_estimator" type="l3_footstep_planning::TraversabilityStepCostEstimator"
+         base_class_type="l3_footstep_planning::StepCostEstimatorPlugin">
+    <description>
+      TraversabilityStepCostEstimator: Punishes movements depending on the traversability of the ground
+    </description>
+  </class>
 
   <!-- HeuristicPlugin -->
+  <class name="pitch_heuristic" type="l3_footstep_planning::PitchHeuristic"
+         base_class_type="l3_footstep_planning::HeuristicPlugin">
+    <description>
+      PitchHeuristic: Estimates best orientation orthogonal to elevation changes
+    </description>
+  </class>
   <class name="traversability_rotation_heuristic" type="l3_footstep_planning::TraversabilityRotationHeuristic"
          base_class_type="l3_footstep_planning::HeuristicPlugin">
     <description>

@@ -31,9 +31,9 @@ planner_type: ARAPlanner
 #num_random_nodes: 10
 
 # search until a specific time limit is reached or first solution is found
-search_until_first_solution: True
+search_until_first_solution: False
 
-max_planning_time: 1.0 # default max planning time if not given by request
+max_planning_time: 2.0 # default max planning time if not given by request
 initial_epsilon: 8.0
 decrease_epsilon: 0.2
 
@@ -49,7 +49,7 @@ collision_check:
   # - 0 (just the circumcircle of the foot)
   # - 1 (just the incircle of the foot)
   # - 2 (circumcircle and incircle recursivly checked for the whole foot)
-  collision_check_accuracy: 2
+  collision_check_accuracy: 1
 
 ### misc ###################################################################
 feedback_rate: 10.0 # [Hz]

@@ -16,13 +16,17 @@ catkin_package(
 include_directories(include ${catkin_INCLUDE_DIRS} ${boost_INCLUDE_DIRS})
 
 set(HEADERS
+  include/${PROJECT_NAME}/std/heuristic/pitch_heuristic.h
   include/${PROJECT_NAME}/std/heuristic/traversability_rotation_heuristic.h
   include/${PROJECT_NAME}/std/step_cost_estimator/angular_step_cost_estimator.h
+  include/${PROJECT_NAME}/std/step_cost_estimator/pitch_step_cost_estimator.h
   include/${PROJECT_NAME}/std/step_cost_estimator/traversability_step_cost_estimator.h)
 
 set(SOURCES
+  src/std/heuristic/pitch_heuristic.cpp
   src/std/heuristic/traversability_rotation_heuristic.cpp
   src/std/step_cost_estimator/angular_step_cost_estimator.cpp
+  src/std/step_cost_estimator/pitch_step_cost_estimator.cpp
   src/std/step_cost_estimator/traversability_step_cost_estimator.cpp)
 
 add_library(${PROJECT_NAME} ${SOURCES} ${HEADERS})
