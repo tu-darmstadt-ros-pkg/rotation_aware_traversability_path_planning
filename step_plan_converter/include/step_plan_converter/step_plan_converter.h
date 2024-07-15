@@ -90,7 +90,10 @@ protected:
   ros::Subscriber traversability_map_sub_;
 
   // The publisher for the coverted path
- ros::Publisher path_pub_;
+  ros::Publisher path_pub_;
+
+  // The time the planning was started
+  ros::Time planning_start_time_;
 
   // The action client for the follow path action
   actionlib::SimpleActionClient<move_base_lite_msgs::FollowPathAction> follow_path_ac_;

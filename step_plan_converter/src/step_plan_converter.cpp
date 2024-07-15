@@ -62,6 +62,9 @@ void StepPlanConverter::moveBaseGoalCB()
   // get the new goal
   geometry_msgs::PoseStamped current_goal = move_base_as_.acceptNewGoal()->target_pose;
 
+  // update the planning start time
+  planning_start_time_ = ros::Time::now();
+
   // create the header
   std_msgs::Header header;
   header.frame_id = current_goal.header.frame_id;
@@ -148,8 +151,7 @@ void StepPlanConverter::stepPlanResultCb( const l3_footstep_planning_msgs::StepP
   }
 
   nav_msgs::Path path;
-  // use the timestamp of the first pose as the timestamp of the path
-  path.header.stamp = poses.front().header.stamp;
+  path.header.stamp = planning_start_time_;
   path.header.frame_id = result->step_plan.header.frame_id;
   path.poses = poses;
 
