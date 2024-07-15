@@ -61,8 +61,8 @@ plugin_sets:
         elevation_map_topic: /traversability_estimation/traversability_map
         normal_x_layer: surface_normal_x
         normal_y_layer: surface_normal_y
-        num_sampling_steps: 30
-        linear_weight: 75.0
+        num_sampling_steps: 15
+        linear_weight: 10.0
 
     # HeuristicPlugins
     pitch_heuristic:
