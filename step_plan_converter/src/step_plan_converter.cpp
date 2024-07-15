@@ -53,6 +53,8 @@ StepPlanConverter::StepPlanConverter( ros::NodeHandle &nh )
                                                                                                             false );
 
   traversability_map_sub_ = nh.subscribe( "/grid_map", 1, &StepPlanConverter::mapCallback, this );
+
+  path_pub_ = nh.advertise<nav_msgs::Path>( "/step_plan_l3", 1 );
 }
 
 void StepPlanConverter::moveBaseGoalCB()
@@ -100,8 +102,10 @@ void StepPlanConverter::moveBaseCancelCB()
     move_base_lite_msgs::MoveBaseResult result;
     result.result.val = move_base_lite_msgs::ErrorCodes::PREEMPTED;
     move_base_as_.setPreempted( result, "Action preempted at user request" );
-    if ( step_plan_request_ac_->isServerConnected())
+    if ( step_plan_request_ac_->isServerConnected()) {
       step_plan_request_ac_->cancelAllGoals();
+      step_plan_request_ac_->stopTrackingGoal();
+    }
     if ( follow_path_ac_.isServerConnected())
       follow_path_ac_.cancelAllGoals();
   }
@@ -147,6 +151,9 @@ void StepPlanConverter::stepPlanResultCb( const l3_footstep_planning_msgs::StepP
   path.header.frame_id = result->step_plan.header.frame_id;
   path.poses = poses;
 
+  // publish the path
+  path_pub_.publish( path );
+
   // create goal for action server
   move_base_lite_msgs::FollowPathActionGoal goal;
 
@@ -162,7 +169,7 @@ void StepPlanConverter::stepPlanResultCb( const l3_footstep_planning_msgs::StepP
   goal.goal.follow_path_options.goal_pose_angle_tolerance = 0.15;
   goal.goal.follow_path_options.desired_speed = 0.0;
   goal.goal.follow_path_options.reset_stuck_history = true;
-  goal.goal.follow_path_options.is_fixed = false;
+  goal.goal.follow_path_options.is_fixed = true;
 
   // send goal
   follow_path_ac_.sendGoal( goal.goal, boost::bind( &StepPlanConverter::followPathDoneCB, this, _1, _2 ));
