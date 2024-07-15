@@ -148,6 +148,8 @@ void StepPlanConverter::stepPlanResultCb( const l3_footstep_planning_msgs::StepP
   }
 
   nav_msgs::Path path;
+  // use the timestamp of the first pose as the timestamp of the path
+  path.header.stamp = poses.front().header.stamp;
   path.header.frame_id = result->step_plan.header.frame_id;
   path.poses = poses;
 
