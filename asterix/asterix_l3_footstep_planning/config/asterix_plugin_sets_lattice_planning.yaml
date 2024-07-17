@@ -56,21 +56,21 @@ plugin_sets:
         mean_traversability_weight: 0.75
         safety_margin_x: 0.1
         safety_margin_y: 0.1
-    pitch_step_cost_estimator:
-      params:
-        elevation_map_topic: /traversability_estimation/traversability_map
-        normal_x_layer: surface_normal_x
-        normal_y_layer: surface_normal_y
-        num_sampling_steps: 15
-        linear_weight: 10.0
+    #pitch_step_cost_estimator:
+    #  params:
+    #    elevation_map_topic: /traversability_estimation/traversability_map
+    #    normal_x_layer: surface_normal_x
+    #    normal_y_layer: surface_normal_y
+    #    num_sampling_steps: 15
+    #    linear_weight: 10.0
 
     # HeuristicPlugins
-    pitch_heuristic:
-      params:
-        disable_distance: 0.0
-        elevation_map_topic: /traversability_estimation/traversability_map
-        normal_x_layer: surface_normal_x
-        normal_y_layer: surface_normal_y
+    #pitch_heuristic:
+    #  params:
+    #    disable_distance: 0.0
+    #    elevation_map_topic: /traversability_estimation/traversability_map
+    #    normal_x_layer: surface_normal_x
+    #    normal_y_layer: surface_normal_y
     traversability_rotation_heuristic:
       params:
         traversability_map_topic: /grid_map
