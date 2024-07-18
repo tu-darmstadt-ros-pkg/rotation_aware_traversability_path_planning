@@ -51,9 +51,9 @@ plugin_sets:
         apply_smoothing: [ True, True, False ]
         resolution: 0.05
         unknown_area_value: [ 0.9, 0.9, 0.0 ]
-        gaussian_kernel_width: [ 7, 5, 1 ]
-        gaussian_kernel_height: [ 7, 5, 1 ]
-        sigma_x: [ 7.0, 5.0, 1.0 ]
+        gaussian_kernel_width: [ 3, 1, 1 ]
+        gaussian_kernel_height: [ 3, 1, 1 ]
+        sigma_x: [ 2.0, 2.0, 1.0 ]
         sigma_y: [ 0.0, 0.0, 0.0 ]
         erosion_kernel_width: [ 1, 1, 1 ]
         erosion_kernel_height: [ 1, 1, 1 ]

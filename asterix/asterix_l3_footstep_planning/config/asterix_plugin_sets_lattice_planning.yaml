@@ -3,18 +3,18 @@ plugin_sets:
     # StateGeneratorPlugin
     direct_goal_state_generator:
       params:
-        max_fb_dist: 0.3
+        max_fb_dist: 0.4
         strict_mode: False
     #lattice_goal_state_generator:
     #  params: &lattice_params
     #    expand_neutral_stance: True
     #    turn_in_place: True
-    #    omni_directional: True
+    #    omni_directional: False
     #    max_dist:
-    #      x: 0.3
+    #      x: 0.4
     #      y: 0.2
-    #    max_dyaw: 0.78
-    #    min_curve_radius: 0.5
+    #    max_dyaw: 0.7854
+    #    min_curve_radius: 0.1
 
     lattice_state_generator:
       params:
@@ -23,21 +23,21 @@ plugin_sets:
           x: &cell_size 0.05
           y: *cell_size
           z: *cell_size
-          num_angle_bins: &num_angle_bins 72 # bins per full turn (0-360°)
+          num_angle_bins: &num_angle_bins 180 # bins per full turn (0-360°)
         expand_neutral_stance: True
         turn_in_place: True
         omni_directional: False
         max_dist:
           x: 0.4
-          y: 0.2
+          y: 0.4
         max_dyaw: 0.78
-        min_curve_radius: 0.5
+        min_curve_radius: 0.3
 
     # ReachabilityPlugins
     # TODO: We require a new simple dist check plugin suitable for lattice planning
     state_3d_reachability:
       params:
-        max_step_dz: 0.2
+        max_step_dz: 1.0
 
     # StepCostEstimatorPlugins
     const_step_cost_estimator:
@@ -100,7 +100,7 @@ plugin_sets:
       params:
         sway_duration: 0.0
         step_duration: 1.0
-        swing_height: 0.1
+        swing_height: 0.0
     simple_floating_base_post_process:
       params:
         post_process_state: True
